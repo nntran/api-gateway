@@ -1,0 +1,44 @@
+# content of jaeger-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger
+  labels:
+    app: jaeger
+spec:
+  #type: LoadBalancer
+  selector:
+    app: jaeger
+  ports:
+    - name: tcp1
+      protocol: TCP
+      port: 5778
+      targetPort: 5778
+    - name: tcp2
+      protocol: TCP
+      port: 14268
+      targetPort: 14268
+    - name: tcp3
+      protocol: TCP
+      port: 14250
+      targetPort: 14250
+    - name: tcp4
+      protocol: TCP
+      port: 9411
+      targetPort: 9411
+    - name: tcp5
+      protocol: TCP
+      port: 16686
+      targetPort: 16686
+    - name: udp1
+      protocol: UDP
+      port: 5775
+      targetPort: 5775
+    - name: udp2
+      protocol: UDP
+      port: 6831
+      targetPort: 6831
+    - name: udp3
+      protocol: UDP
+      port: 6832
+      targetPort: 6832

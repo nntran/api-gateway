@@ -1,0 +1,49 @@
+# content of deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: krakend
+  labels:
+    app: api-gateway
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: krakend
+          image: devopsfaith/krakend:1.4.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: stats
+              containerPort: 8090
+          resources:
+            requests:
+              memory: '64Mi'
+              cpu: '100m'
+            limits:
+              memory: '1024Mi'
+              cpu: '1000m'
+          volumeMounts:
+            - name: config
+              mountPath: /etc/krakend
+      volumes:
+        - name: config
+          configMap:
+            name: krakend-config
+            defaultMode: 420

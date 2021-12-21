@@ -1,0 +1,321 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: krakend-config
+data:
+  krakend.json: |
+    {
+      "version": 2,
+      "port": 8080,
+      "timeout": "3000ms",
+      "cache_ttl": "300s",
+      "output_encoding": "json",
+      "name": "api-gateway",
+      "extra_config": {
+        "github_com/devopsfaith/krakend-cors": {
+          "allow_origins": [
+            "*"
+          ],
+          "expose_headers": [
+            "Content-Length",
+            "Location"
+          ],
+          "max_age": "12h",
+          "allow_methods": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "OPTIONS"
+          ]
+        },
+        "github_com/devopsfaith/krakend-gologging": {
+          "level": "DEBUG",
+          "prefix": "[KRAKEND]",
+          "syslog": false,
+          "stdout": true,
+          "format": "default"
+        },
+        "github_com/devopsfaith/krakend-opencensus": {
+          "sample_rate": 100,
+          "reporting_period": 1,
+          "enabled_layers": {
+            "backend": true,
+            "router": true,
+            "pipe": true
+          },
+          "exporters": {
+            "jaeger": {
+              "endpoint": "http://jaeger.monitoring.svc:14268/api/traces",
+              "service_name": "api-gateway"
+            },
+            "prometheus": {
+              "port": 9091
+            }
+          }
+        },
+        "github_com/letgoapp/krakend-influx": {
+          "address": "http://influxdb.monitoring.svc:8086",
+          "ttl": "25s",
+          "buffer_size": 0,
+          "db": "krakend",
+          "username": "demo",
+          "password": "krakend"
+        },
+        "github_com/devopsfaith/krakend-metrics": {
+          "collection_time": "30s",
+          "listen_address": "api-gateway:8090"
+        }
+      },
+      "endpoints": [
+        {
+          "endpoint": "/v1/product/{id}",
+          "method": "GET",
+          "output_encoding": "no-op",
+          "extra_config": {
+            "github.com/devopsfaith/krakend-jose/validator": {
+              "alg": "RS256",
+              "jwk-url": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/certs",
+              "disable_jwk_security": true
+            },
+            "github.com/devopsfaith/krakend-jose/signer": {
+              "alg": "HS256",
+              "jwk-url": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/certs",
+              "disable_jwk_security": true
+            }
+          },
+          "backend": [
+            {
+              "url_pattern": "/product/{id}",
+              "encoding": "no-op",
+              "method": "GET",
+              "sd": "static",
+              "host": [
+                "http://frontend:8080"
+              ],
+              "extra_config": {}
+            }
+          ]
+        },
+        {
+          "endpoint": "/v1/cart",
+          "method": "POST",
+          "output_encoding": "no-op",
+          "extra_config": {
+            "github.com/devopsfaith/krakend-jose/validator": {
+              "alg": "RS256",
+              "jwk-url": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/certs",
+              "disable_jwk_security": true
+            }
+          },
+          "backend": [
+            {
+              "url_pattern": "/cart",
+              "encoding": "no-op",
+              "method": "POST",
+              "sd": "static",
+              "host": [
+                "http://frontend:8080"
+              ],
+              "extra_config": {}
+            }
+          ]
+        },
+        {
+          "endpoint": "/v1/cart",
+          "method": "GET",
+          "output_encoding": "no-op",
+          "extra_config": {
+            "github.com/devopsfaith/krakend-jose/validator": {
+              "alg": "RS256",
+              "jwk-url": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/certs",
+              "disable_jwk_security": true
+            }
+          },
+          "backend": [
+            {
+              "url_pattern": "/cart",
+              "encoding": "no-op",
+              "method": "GET",
+              "sd": "static",
+              "host": [
+                "http://frontend:8080"
+              ]
+            }
+          ]
+        },
+        {
+          "endpoint": "/v1/cart/empty",
+          "method": "POST",
+          "output_encoding": "no-op",
+          "extra_config": {
+            "github.com/devopsfaith/krakend-jose/validator": {
+              "alg": "RS256",
+              "jwk-url": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/certs",
+              "disable_jwk_security": true
+            }
+          },
+          "backend": [
+            {
+              "url_pattern": "/cart/empty",
+              "encoding": "no-op",
+              "method": "POST",
+              "sd": "static",
+              "host": [
+                "http://frontend:8080"
+              ]
+            }
+          ]
+        },
+        {
+          "endpoint": "/v1/cart/checkout",
+          "method": "POST",
+          "output_encoding": "no-op",
+          "extra_config": {
+            "github.com/devopsfaith/krakend-jose/validator": {
+              "alg": "RS256",
+              "jwk-url": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/certs",
+              "disable_jwk_security": true
+            }
+          },
+          "backend": [
+            {
+              "url_pattern": "/cart/checkout",
+              "encoding": "no-op",
+              "method": "POST",
+              "sd": "static",
+              "host": [
+                "http://frontend:8080"
+              ]
+            }
+          ]
+        },
+        {
+          "endpoint": "/v1/currency",
+          "method": "POST",
+          "output_encoding": "no-op",
+          "extra_config": {
+            "github.com/devopsfaith/krakend-jose/validator": {
+              "alg": "RS256",
+              "jwk-url": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/certs",
+              "disable_jwk_security": true
+            }
+          },
+          "backend": [
+            {
+              "url_pattern": "/setCurrency",
+              "encoding": "no-op",
+              "method": "POST",
+              "sd": "static",
+              "host": [
+                "http://frontend:8080"
+              ],
+              "disable_host_sanitize": true,
+              "extra_config": {}
+            }
+          ]
+        },
+        {
+          "endpoint": "/v1/health",
+          "method": "POST",
+          "output_encoding": "no-op",
+          "extra_config": {},
+          "backend": [
+            {
+              "url_pattern": "/_healthz",
+              "encoding": "no-op",
+              "method": "POST",
+              "extra_config": {},
+              "sd": "static",
+              "host": [
+                "http://frontend:8080"
+              ],
+              "disable_host_sanitize": true
+            }
+          ]
+        },
+        {
+          "endpoint": "/v1/logout",
+          "method": "GET",
+          "output_encoding": "no-op",
+          "extra_config": {
+            "github.com/devopsfaith/krakend-jose/validator": {
+              "alg": "RS256",
+              "jwk-url": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/certs",
+              "disable_jwk_security": true
+            }
+          },
+          "backend": [
+            {
+              "url_pattern": "/logout",
+              "encoding": "no-op",
+              "method": "GET",
+              "extra_config": {},
+              "sd": "static",
+              "host": [
+                "http://frontend:8080"
+              ],
+              "disable_host_sanitize": true
+            }
+          ]
+        },
+        {
+          "endpoint": "/v1/home",
+          "method": "GET",
+          "output_encoding": "no-op",
+          "extra_config": {},
+          "backend": [
+            {
+              "url_pattern": "/",
+              "encoding": "no-op",
+              "method": "GET",
+              "extra_config": {},
+              "sd": "static",
+              "host": [
+                "http://frontend:8080"
+              ],
+              "disable_host_sanitize": true
+            }
+          ]
+        },
+        {
+          "endpoint": "/v2/contacts",
+          "method": "GET",
+          "output_encoding": "no-op",
+          "extra_config": {},
+          "backend": [
+            {
+              "url_pattern": "/api/contacts",
+              "encoding": "no-op",
+              "method": "GET",
+              "extra_config": {},
+              "sd": "static",
+              "host": [
+                "http://contacts:8080"
+              ],
+              "disable_host_sanitize": true
+            }
+          ]
+        },
+        {
+          "endpoint": "/v2/contacts",
+          "method": "POST",
+          "output_encoding": "no-op",
+          "extra_config": {},
+          "backend": [
+            {
+              "url_pattern": "/api/contacts",
+              "encoding": "no-op",
+              "method": "POST",
+              "extra_config": {},
+              "sd": "static",
+              "host": [
+                "http://contacts:8080"
+              ],
+              "disable_host_sanitize": true
+            }
+          ]
+        }
+      ]
+    }

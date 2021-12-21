@@ -1,0 +1,28 @@
+# content of krakend-ingress.yaml
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-gateway
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: http
+    # kubernetes.io/ingress.class: ambassador
+spec:
+  rules:
+    - host: api.dev.lan
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service: 
+                name: api-gateway
+                port: 
+                  number: 8080
+          # - pathType: Prefix
+          #   path: /__stats
+          #   backend:
+          #     service: 
+          #       name: api-gateway
+          #       port: 
+          #         number: 8090

@@ -1,0 +1,24 @@
+# content of krakend-ingress.yaml
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak-ui
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: http
+    #kubernetes.io/ingress.class: ambassador
+spec:
+  tls:
+    - hosts:
+      - keycloak.dev.lan
+  rules:
+    - host: keycloak.dev.lan
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service: 
+                name: keycloak
+                port: 
+                  number: 8080

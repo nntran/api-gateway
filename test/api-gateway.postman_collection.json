@@ -1,0 +1,661 @@
+{
+	"info": {
+		"_postman_id": "ae7a542a-13e5-44d5-8736-4648e2d4dc10",
+		"name": "api-gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Contacts",
+			"item": [
+				{
+					"name": "Get all contacts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/v2/contacts",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"v2",
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a contact",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"avatarLocation\": \"\",\n    \"city\": \"La Roche Sur Yon\",\n    \"company\": \"Wizaplace\",\n    \"country\": \"FRANCE\",\n    \"description\": \"CSA\",\n    \"email\": \"nhi.tran@wizaplace.com\",\n    \"firstname\": \"TRAN\",\n    \"houseNumber\": \"1\",\n    \"id\": \"426f6e33-8fa4-4428-ab70-4ce3c334724e\",\n    \"lastname\": \"Nhi\",\n    \"mobile\": \"+1 32 6546 6542\",\n    \"phone\": \"+1 32 6546 6545\",\n    \"postalCode\": \"85000\",\n    \"street\": \"street\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/v2/contacts",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"v2",
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Google Market",
+			"item": [
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "Browse a product (Home Barista Kit)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Update Token ID\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ID_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{API_GATEWAY_URL}}/v1/product/1YMWWN1N4O",
+									"host": [
+										"{{API_GATEWAY_URL}}"
+									],
+									"path": [
+										"v1",
+										"product",
+										"1YMWWN1N4O"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cart",
+					"item": [
+						{
+							"name": "View cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ID_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{ID_USER}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{API_GATEWAY_URL}}/v1/cart",
+									"host": [
+										"{{API_GATEWAY_URL}}"
+									],
+									"path": [
+										"v1",
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add product into cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ID_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "shop_session-id",
+										"value": "{{ID_SESSION}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "product_id",
+											"value": "1YMWWN1N4O",
+											"type": "text"
+										},
+										{
+											"key": "quantity",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "userId",
+											"value": "{{ID_USER}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_GATEWAY_URL}}/v1/cart",
+									"host": [
+										"{{API_GATEWAY_URL}}"
+									],
+									"path": [
+										"v1",
+										"cart"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Checkout",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ID_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "shop_session-id",
+										"value": "{{ID_SESSION}}",
+										"type": "text"
+									},
+									{
+										"key": "userId",
+										"value": "{{ID_USER}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "email",
+											"value": "1600 Amphitheatre Parkway",
+											"type": "text"
+										},
+										{
+											"key": "zip_code",
+											"value": "Mountain View",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "CA",
+											"type": "text"
+										},
+										{
+											"key": "country",
+											"value": "United States",
+											"type": "text"
+										},
+										{
+											"key": "credit_card_number",
+											"value": "4432-8015-6152-0454",
+											"type": "text"
+										},
+										{
+											"key": "credit_card_expiration_month",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "credit_card_expiration_year",
+											"value": "2022",
+											"type": "text"
+										},
+										{
+											"key": "credit_card_cvv",
+											"value": "672",
+											"type": "text"
+										},
+										{
+											"key": "userId",
+											"value": "{{ID_USER}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_GATEWAY_URL}}/v1/cart/checkout",
+									"host": [
+										"{{API_GATEWAY_URL}}"
+									],
+									"path": [
+										"v1",
+										"cart",
+										"checkout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Currency",
+					"item": [
+						{
+							"name": "Set currency",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{ID_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"currency_code\": \"EUR\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{API_GATEWAY_URL}}/v1/currency",
+									"host": [
+										"{{API_GATEWAY_URL}}"
+									],
+									"path": [
+										"v1",
+										"currency"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Home",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/v1/home",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"v1",
+								"home"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ID_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/v1/logout",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"v1",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/v1/health",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"v1",
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "keycloak",
+			"item": [
+				{
+					"name": "Get OIDC Configuration",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{KEYCLOAK_URL}}/auth/realms/demo/.well-known/openid-configuration",
+							"host": [
+								"{{KEYCLOAK_URL}}"
+							],
+							"path": [
+								"auth",
+								"realms",
+								"demo",
+								".well-known",
+								"openid-configuration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"console.log(jsonData);",
+									"pm.collectionVariables.set(\"ID_TOKEN\", jsonData.access_token);",
+									"pm.collectionVariables.set(\"REFRESH_TOKEN\", jsonData.refresh_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "demo",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "demo",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "front-demo-app",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{KEYCLOAK_URL}}/auth/realms/demo/protocol/openid-connect/token",
+							"host": [
+								"{{KEYCLOAK_URL}}"
+							],
+							"path": [
+								"auth",
+								"realms",
+								"demo",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});",
+									"",
+									"let jsonData = pm.response.json();",
+									"console.log(jsonData);",
+									"pm.collectionVariables.set(\"ID_TOKEN\", jsonData.access_token);",
+									"pm.collectionVariables.set(\"REFRESH_TOKEN\", jsonData.refresh_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "front-demo-app",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "{{REFRESH_TOKEN}}",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "openid",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{KEYCLOAK_URL}}/auth/realms/demo/protocol/openid-connect/token",
+							"host": [
+								"{{KEYCLOAK_URL}}"
+							],
+							"path": [
+								"auth",
+								"realms",
+								"demo",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{ID_TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{KEYCLOAK_URL}}/auth/realms/demo/protocol/openid-connect/logout",
+							"host": [
+								"{{KEYCLOAK_URL}}"
+							],
+							"path": [
+								"auth",
+								"realms",
+								"demo",
+								"protocol",
+								"openid-connect",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "KEYCLOAK_URL",
+			"value": "http://keycloak.dev.lan"
+		},
+		{
+			"key": "API_GATEWAY_URL",
+			"value": "http://api.dev.lan"
+		},
+		{
+			"key": "ID_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "ID_SESSION",
+			"value": ""
+		},
+		{
+			"key": "ID_USER",
+			"value": ""
+		},
+		{
+			"key": "REFRESH_TOKEN",
+			"value": ""
+		}
+	]
+}

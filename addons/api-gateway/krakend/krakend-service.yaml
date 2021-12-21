@@ -1,0 +1,19 @@
+# content of krakend-service.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+spec:
+  #type: LoadBalancer
+  selector:
+    app: api-gateway
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+    - name: stats
+      port: 8090
+      targetPort: 8090
