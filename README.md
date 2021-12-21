@@ -1,8 +1,8 @@
-# Démo API Gateway & IAM
+# API Gateway & IAM
 
 <!-- TOC -->
 
-- [Démo API Gateway & IAM](#démo-api-gateway--iam)
+- [API Gateway & IAM](#démo-api-gateway--iam)
   - [Objectifs](#objectifs)
   - [Architecture du projet](#architecture-du-projet)
     - [API Gateway](#api-gateway)
