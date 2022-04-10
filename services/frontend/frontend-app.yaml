@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-demo-app
+spec:
+  selector:
+    matchLabels:
+      app: frontend-demo-app
+  template:
+    metadata:
+      labels:
+        app: frontend-demo-app
+      annotations:
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: frontend-demo-app
+          image: ntdtfr/frontend-demo
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PORT
+              value: "8000"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-demo-app
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend-demo-app
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+---
+# https://kubernetes.io/docs/concepts/services-networking/ingress/
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: frontend-demo-app
+  annotations:
+    # With Traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: http
+    # With Ambassador
+    # kubernetes.io/ingress.class: ambassador
+spec:
+  rules:
+    - host: frontend-demo.dev.lan
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-demo-app
+                port:
+                  number: 8000
