@@ -197,7 +197,7 @@ Les échanges entre microservices se font pricipalement via le protocole GRPC. S
 Commençons par récuper le projet sur notre poste de travail:
 
 ```
-git clone https://github.com/nntran/sample-api-gateway.git
+git clone https://github.com/nntran/api-gateway.git
 ```
 
 ### 2. Créer un cluster K8S en local
